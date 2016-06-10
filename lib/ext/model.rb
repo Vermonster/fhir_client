@@ -41,6 +41,10 @@ module FHIR
     end
 
     def resolve(reference)
+      if reference.is_a?(String)
+        reference = reference.split('.').inject(self) { |obj, m| obj.send(m) }
+      end
+
       if reference.contained?
         contained.detect { |resource| resource.id == reference.id }
       else
