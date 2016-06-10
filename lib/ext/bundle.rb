@@ -30,7 +30,7 @@ module FHIR
     end
 
     def each(&block)
-      iteration = @entry.map(&:resource).each(&block)
+      iteration = @entry.map(&:resource).each { |r| r.client = client }.each(&block)
       iteration += next_bundle.each(&block) if next_bundle
       iteration
     end

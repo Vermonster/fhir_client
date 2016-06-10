@@ -4,21 +4,10 @@ module FHIR
       cattr_accessor :client
     end
 
+    attr_writer :client
+
     def client
       @client || self.class.client
-    end
-
-    def client=(client)
-      @client = client
-
-      # Ensure the client-setting cascades to all child models
-      instance_values.each do |_key, values|
-        Array.wrap(values).each do |value|
-          next unless value.is_a?(FHIR::Model)
-          next if value.client == client
-          value.client = client
-        end
-      end
     end
 
     def self.read(id, client = self.client)
@@ -48,6 +37,14 @@ module FHIR
         self.class.create(self, client)
       else
         update
+      end
+    end
+
+    def resolve(reference)
+      if reference.contained?
+        contained.detect { |resource| resource.id == reference.id }
+      else
+        reference.klass.read(reference.id)
       end
     end
   end
