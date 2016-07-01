@@ -242,15 +242,15 @@ module FHIR
 
   # class logger defaults to fhir_client_verbose logfile, but can override
   def self.logger
-    @@logger || default_logger
+    @logger || default_logger
   end
 
   def self.logger=(logger)
-    @@logger = logger
+    @logger = logger
   end
 
   def self.default_logger
-    @@default_logger ||= Logger.new("fhir_client_verbose.log", 10, 1024000)
+    @default_logger ||= Logger.new("fhir_client_verbose.log", 10, 1024000)
   end
 
   private
